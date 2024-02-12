@@ -31,9 +31,9 @@ Account.init(
     password: {
       type: DataTypes.STRING,
       allowNull: false,
-      validate: {
+      /*validate: {
         len: [8],
-      },
+      },*/
     },
   },
   {

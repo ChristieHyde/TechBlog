@@ -8,14 +8,14 @@
   <div class="col-md-6">
     <h3>Make a New Blog Post:</h3>
 
-    <form class="form new-blogpost-form">
+    <form class="form new-blog-form">
       <div class="form-group">
-        <label for="blogpost-title">Title:</label>
-        <input class="form-input" type="text" id="blogpost-title" name="blogpost-title" />
+        <label for="blog-title">Title:</label>
+        <input class="form-input" type="text" id="blog-title" name="blog-title" />
       </div>
       <div class="form-group">
-        <label for="blogpost-contents">Contents:</label>
-        <textarea class="form-input" id="blogpost-contents" name="blogpost-contents"></textarea>
+        <label for="blog-contents">Contents:</label>
+        <textarea class="form-input" id="blog-contents" name="blog-contents"></textarea>
       </div>
       <div class="form-group">
         <button type="submit" class="btn btn-primary">Post</button>
@@ -23,22 +23,26 @@
     </form>
   </div>
 
-  {{#if projects.length}}
-  <div class="col-md-6 project-list">
-    <h3>Current Projects:</h3>
+  <div class="col-md-6 blog-list">
+  {{#if blog_posts.length}}
+    <h3>Older Blog Posts:</h3>
 
-    {{#each projects as |project|}}
+    {{#each blog_posts as |blog|}}
     <div class="row mb-2">
       <div class="col-md-8">
-        <h4><a href="/project/{{project.id}}">{{project.name}}</a></h4>
+        <h4><a href="/blog/{{blog.id}}">{{blog.title}}</a></h4>
       </div>
       <div class="col-md-4">
-        <button class="btn btn-sm btn-danger" data-id="{{project.id}}">DELETE</button>
+        <button class="btn btn-sm btn-danger" data-id="{{blog.id}}">DELETE</button>
       </div>
     </div>
     {{/each}}
-  </div>
+  <!-- Display negative header if no blog posts
+  {{each}}
+    <h3>No Blog Posts</h3>
+  -->
   {{/if}}
+  </div>
 </div>
 
-<script src="./js/profile.js"></script>
+<script src="../js/dashboard.js"></script>

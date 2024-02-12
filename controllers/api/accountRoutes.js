@@ -1,17 +1,18 @@
 const router = require('express').Router();
 const { Account } = require('../../models');
+const { Op } = require('sequelize');
 
 router.post('/signup', async (req, res) => {
-     try {
+    try {
         // Check for duplicate emails in database
         const duplicateAccountCheck = await Account.findOne({
             where: {
-                $or: [
+                [Op.or]: [
                     {
-                        name: { $eq: req.body.name }
+                        name: { [Op.eq]: req.body.name }
                     },
                     {
-                        email: { $eq: req.body.email }
+                        email: { [Op.eq]: req.body.email }
                     },
                 ]
             }
@@ -27,8 +28,8 @@ router.post('/signup', async (req, res) => {
         const accountData = await Account.create(req.body);
 
         req.session.save(() => {
-        req.session.account_id = accountData.id;
-        req.session.logged_in = true;
+            req.session.account_id = accountData.id;
+            req.session.logged_in = true;
 
         res.status(200).json(accountData);
         });
@@ -41,39 +42,38 @@ router.post('/login', async (req, res) => {
     try {
         const accountData = await Account.findOne({
             where: {
-                $or: [
+                [Op.or]: [
                     {
-                        name: { $eq: req.body.nameOrEmail }
+                        name: { [Op.eq]: req.body.nameOrEmail }
                     },
                     {
-                        email: { $eq: req.body.nameOrEmail }
+                        email: { [Op.eq]: req.body.nameOrEmail }
                     },
                 ]
             }
         });
-
         if (!accountData) {
-        res
-            .status(400)
-            .json({ message: 'Incorrect email or password, please try again' });
-        return;
-    }
+            res
+                .status(400)
+                .json({ message: 'Incorrect email or password, please try again' });
+            return;
+        }
 
-    const validPassword = await accountData.checkPassword(req.body.password);
+        const validPassword = await accountData.checkPassword(req.body.password);
 
-    if (!validPassword) {
-        res
-            .status(400)
-            .json({ message: 'Incorrect email or password, please try again' });
-        return;
-    }
+        if (!validPassword) {
+            res
+                .status(400)
+                .json({ message: 'Incorrect email or password, please try again' });
+            return;
+        }
 
-    req.session.save(() => {
-        req.session.account_id = accountData.id;
-        req.session.logged_in = true;
+        req.session.save(() => {
+            req.session.account_id = accountData.id;
+            req.session.logged_in = true;
       
-        res.json({ account: accountData, message: 'Login successful' });
-    });
+            res.json({ account: accountData, message: 'Login successful' });
+        });
 
     } catch (err) {
         res.status(400).json(err);
