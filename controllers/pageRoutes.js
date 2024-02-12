@@ -21,7 +21,7 @@ router.get('/', async (req, res) => {
 
         // Render homepage with recent blogs
         res.render('homepage', { 
-            ...recentBlogs, 
+            recentBlogs, 
             logged_in: req.session.logged_in 
         });
     } catch (err) {
