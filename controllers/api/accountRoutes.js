@@ -4,8 +4,19 @@ const { Account } = require('../../models');
 router.post('/signup', async (req, res) => {
      try {
         // Check for duplicate emails in database
-        const duplicateAccountCheck = await Account.findOne({ where: { email: req.body.email } });
-        if (accountData) {
+        const duplicateAccountCheck = await Account.findOne({
+            where: {
+                $or: [
+                    {
+                        name: { $eq: req.body.name }
+                    },
+                    {
+                        email: { $eq: req.body.email }
+                    },
+                ]
+            }
+        });
+        if (duplicateAccountCheck) {
             res
                 .status(400)
                 .json({ message: 'An account with this email address already exists' });
@@ -28,7 +39,18 @@ router.post('/signup', async (req, res) => {
 
 router.post('/login', async (req, res) => {
     try {
-        const accountData = await Account.findOne({ where: { email: req.body.email } });
+        const accountData = await Account.findOne({
+            where: {
+                $or: [
+                    {
+                        name: { $eq: req.body.nameOrEmail }
+                    },
+                    {
+                        email: { $eq: req.body.nameOrEmail }
+                    },
+                ]
+            }
+        });
 
         if (!accountData) {
         res
