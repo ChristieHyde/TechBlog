@@ -1,21 +1,23 @@
 const newCommentHandler = async (event) => {
   event.preventDefault();
 
-  const contents = document.querySelector('#blog-contents').value.trim();
+  const contents = document.querySelector('#comment-contents').value.trim();
+  const url = window.location.href.split('/');
+  const blog_id = url[url.length - 1];
 
   if (contents) {
-    const response = await fetch(`/api/blogs`, {
+    const response = await fetch(`/api/comments/`, {
       method: 'POST',
-      body: JSON.stringify({ contents }),
+      body: JSON.stringify({ contents, blog_id }),
       headers: {
         'Content-Type': 'application/json',
       },
     });
 
     if (response.ok) {
-      document.location.replace('/profile');
+      document.location.replace(`/blog/${blog_id}`);
     } else {
-      alert('Failed to create blog');
+      alert('Failed to create comment');
     }
   }
 };
@@ -29,7 +31,7 @@ const delButtonHandler = async (event) => {
     });
 
     if (response.ok) {
-      document.location.replace('/profile');
+      document.location.replace(`/blog/${blog_id}`);
     } else {
       alert('Failed to delete comment');
     }
@@ -41,5 +43,5 @@ document
   .addEventListener('submit', newCommentHandler);
 
 document
-  .querySelector('.blog-list')
+  .querySelector('.comment-list')
   .addEventListener('click', delButtonHandler);

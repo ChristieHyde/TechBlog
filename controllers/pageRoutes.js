@@ -13,7 +13,7 @@ router.get('/', async (req, res) => {
                 attributes: ['name'],
                 },
             ],
-            order: ['date_created', 'DESC'],
+            order: ['date_created'],
             limit: 5,
         });
 
@@ -55,11 +55,10 @@ router.get('/signup', (req, res) => {
 router.get('/dashboard', withAuth, async (req, res) => {
     try {
         // Find the account from session ID
-        const accountData = await User.findByPk(req.session.account_id, {
+        const accountData = await Account.findByPk(req.session.account_id, {
             attributes: { exclude: ['password'] },
             include: [{ model: BlogPost }],
         });
-  
         const account = accountData.get({ plain: true });
   
         res.render('dashboard', {
