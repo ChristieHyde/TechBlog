@@ -45,3 +45,5 @@ document
 document
   .querySelector('.comment-list')
   .addEventListener('click', delButtonHandler);
+
+document.body.style.backgroundcolor="yellow";
